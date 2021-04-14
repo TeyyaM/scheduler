@@ -23,10 +23,11 @@ const days = [
 
 export default function Application(props) {
   const [day, setDay] = useState("Monday");
+  const [interviewer, setInterviewer] = useState("Mildred Nazir");
   return (
     <main className="layout">
       <section className="sidebar">
-        {<React.Fragment>
+        {<>
           <img
             className="sidebar--centered"
             src="images/logo.png"
@@ -46,7 +47,7 @@ export default function Application(props) {
             src="images/lhl.png"
             alt="Lighthouse Labs"
           />
-        </React.Fragment>}
+        </>}
       </section>
       <section className="schedule">
         {/* Replace this with the schedule elements durint the "The Scheduler" activity. */}
