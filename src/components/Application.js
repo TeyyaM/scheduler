@@ -54,9 +54,15 @@ const appointments = [
 ];
 
 export default function Application(props) {
-  const [day, setDay] = useState("Monday");
-  const [days, setDays] = useState([]);
-
+  const [state, setState] = useState({
+    day: "Monday",
+    days: [],
+    // you may put the line below, but will have to remove/comment hardcoded appointments variable
+    // appointments: {}
+  });
+  const setDays = days => setState(prev => ({ ...prev, days }));;
+  //above removes dependency warning of below
+  // const setDays = days => setState({ ...state, days });
   useEffect(() => {
     const url = `/api/days`;
     axios.get(url)
@@ -82,10 +88,10 @@ export default function Application(props) {
           <hr className="sidebar__separator sidebar--centered" />
           <nav className="sidebar__menu">
             <DayList
-              value={day}
-              days={days}
-              day={day}
-              setDay={setDay}
+              value={state.day}
+              days={state.days}
+              day={state.day}
+              setDay={day => setState({ ...state, day })}
             />
           </nav>
           <img
