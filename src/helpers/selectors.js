@@ -1,10 +1,15 @@
 import React from 'react';
 
-/* filter state.days by day
- grab .appointments array
- filter state.appointments by the items in the appointments array
- return an array with each item corresponding to the specifics of the appointment (use map???)
+/* 
+interview.interviewer 
+is the interviewer id
+return object with student: "studentName" 
+interview.student = student 
+just need to change the interview.interviewer then return interview
+and 
+interviewer: state.interviewers[interviewerId]
 */
+
 
 function getAppointmentsForDay(state, selectedDay) {
   const filteredDay = state.days.filter(day => day.name === selectedDay);
@@ -18,4 +23,11 @@ function getAppointmentsForDay(state, selectedDay) {
 
 };
 
-export { getAppointmentsForDay }
+function getInterview(state, interview) {
+  if (interview) {
+    interview.interviewer = state.interviewers[interview.interviewer];
+  }
+  return (interview);
+};
+
+export { getAppointmentsForDay, getInterview }
