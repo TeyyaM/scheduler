@@ -14,7 +14,6 @@ export default function Application(props) {
     appointments: []
   });
   // const setDays = days => setState(prev => ({ ...prev, days }));;
-  const dailyAppointments = getAppointmentsForDay(state, state.day);
   useEffect(() => {
     const daysUrl = `/api/days`;
     const appointmentsUrl = '/api/appointments';
@@ -28,7 +27,10 @@ export default function Application(props) {
       setState(prev => ({ ...prev, days: all[0].data, appointments: all[1].data, interviewers: all[2].data }));
     });
 
-  }, [])
+  }, []);
+
+  const dailyAppointments = getAppointmentsForDay(state, state.day);
+
   const schedule = dailyAppointments.map(appointment => {
     return <Appointment key={appointment.id} {...appointment} />;
   });
