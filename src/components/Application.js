@@ -5,74 +5,31 @@ import axios from "axios";
 import "./Application.scss";
 import DayList from "./DayList";
 import Appointment from "./Appointment";
-
-const appointments = [
-  {
-    id: 1,
-    time: "12pm",
-  },
-  {
-    id: 2,
-    time: "1pm",
-    interview: {
-      student: "Lydia Miller-Jones",
-      interviewer: {
-        id: 1,
-        name: "Sylvia Palmer",
-        avatar: "https://i.imgur.com/LpaY82x.png",
-      }
-    }
-  },
-  {
-    id: 3,
-    time: "2pm",
-    interview: {
-      student: "Lyla",
-      interviewer: {
-        id: 3,
-        name: "Mildred Nazir",
-        avatar: "https://i.imgur.com/T2WwVfS.png",
-      }
-    }
-  },
-  {
-    id: 4,
-    time: "3pm",
-  },
-  {
-    id: 5,
-    time: "4pm",
-    interview: {
-      student: "Definitely Not Lydia",
-      interviewer: {
-        id: 5,
-        name: "Sven Jones",
-        avatar: "https://i.imgur.com/twYrpay.jpg",
-      }
-    }
-  }
-];
+import { getAppointmentsForDay } from "../helpers/selectors";
 
 export default function Application(props) {
   const [state, setState] = useState({
     day: "Monday",
     days: [],
-    // you may put the line below, but will have to remove/comment hardcoded appointments variable
-    // appointments: {}
+    appointments: []
   });
-  const setDays = days => setState(prev => ({ ...prev, days }));;
-  //above removes dependency warning of below
-  // const setDays = days => setState({ ...state, days });
+  // const setDays = days => setState(prev => ({ ...prev, days }));;
+  const dailyAppointments = getAppointmentsForDay(state, state.day);
   useEffect(() => {
-    const url = `/api/days`;
-    axios.get(url)
-      .then(res => {
-        setDays(res.data)
-      })
+    const daysUrl = `/api/days`;
+    const appointmentsUrl = '/api/appointments';
+    const interviewersUrl = 'api/interviewers';
+
+    Promise.all([
+      axios.get(daysUrl),
+      axios.get(appointmentsUrl),
+      axios.get(interviewersUrl),
+    ]).then((all) => {
+      setState(prev => ({ ...prev, days: all[0].data, appointments: all[1].data, interviewers: all[2].data }));
+    });
 
   }, [])
-
-  const schedule = appointments.map(appointment => {
+  const schedule = dailyAppointments.map(appointment => {
     return <Appointment key={appointment.id} {...appointment} />;
   });
 
