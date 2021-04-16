@@ -1,21 +1,26 @@
 import React from 'react';
 
 /* 
-interview.interviewer 
-is the interviewer id
-return object with student: "studentName" 
-interview.student = student 
-just need to change the interview.interviewer then return interview
-and 
-interviewer: state.interviewers[interviewerId]
+
 */
 
+function getInterviewersForDay(state, selectedDay) {
+  const filteredDay = state.days.filter(day => day.name === selectedDay);
+  if (filteredDay.length) {
+    const interviewerArr = filteredDay[0].interviewers.map(interviewerId => {
+      return state.interviewers[interviewerId];
+    })
+    return interviewerArr;
+  }
+  return [];
+
+};
 
 function getAppointmentsForDay(state, selectedDay) {
   const filteredDay = state.days.filter(day => day.name === selectedDay);
   if (filteredDay.length) {
-    const appointmentArr = filteredDay[0].appointments.map(appointmenId => {
-      return state.appointments[appointmenId];
+    const appointmentArr = filteredDay[0].appointments.map(appointmentId => {
+      return state.appointments[appointmentId];
     })
     return appointmentArr;
   }
@@ -24,10 +29,12 @@ function getAppointmentsForDay(state, selectedDay) {
 };
 
 function getInterview(state, interview) {
+  const returnObj = { ...interview }
   if (interview) {
-    interview.interviewer = state.interviewers[interview.interviewer];
+    returnObj.interviewer = state.interviewers[returnObj.interviewer];
+    return returnObj
   }
   return (interview);
 };
 
-export { getAppointmentsForDay, getInterview }
+export { getAppointmentsForDay, getInterview, getInterviewersForDay }
