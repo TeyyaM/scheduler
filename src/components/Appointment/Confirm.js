@@ -1,7 +1,7 @@
 import React from "react";
 import Button from "../Button";
 
-export default function Show(props) {
+export default function Confirm(props) {
 
   return (
     <main className="appointment__card appointment__card--confirm">
