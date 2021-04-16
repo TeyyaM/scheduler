@@ -1,31 +1,23 @@
 import React from 'react';
 
-/* 
-
-*/
-
-function getInterviewersForDay(state, selectedDay) {
-  const filteredDay = state.days.filter(day => day.name === selectedDay);
-  if (filteredDay.length) {
-    const interviewerArr = filteredDay[0].interviewers.map(interviewerId => {
-      return state.interviewers[interviewerId];
+function getForDay(state, selectedDay, searchWord) {
+  const filteredDay = state.days.find(day => day.name === selectedDay);
+  if (filteredDay) {
+    const returnArr = filteredDay[searchWord].map(searchId => {
+      return state[searchWord][searchId];
     })
-    return interviewerArr;
+    return returnArr;
   }
   return [];
 
 };
 
-function getAppointmentsForDay(state, selectedDay) {
-  const filteredDay = state.days.filter(day => day.name === selectedDay);
-  if (filteredDay.length) {
-    const appointmentArr = filteredDay[0].appointments.map(appointmentId => {
-      return state.appointments[appointmentId];
-    })
-    return appointmentArr;
-  }
-  return [];
+function getInterviewersForDay(state, selectedDay) {
+  return getForDay(state, selectedDay, 'interviewers');
+};
 
+function getAppointmentsForDay(state, selectedDay) {
+  return getForDay(state, selectedDay, 'appointments');
 };
 
 function getInterview(state, interview) {
