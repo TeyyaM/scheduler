@@ -1,10 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "../Button";
 import InterviewerList from "../InterviewerList";
 
 export default function Form(props) {
-  const [name, setName] = useState(props.name || "");
-  const [interviewer, setInterviewer] = useState(props.interviewer || null);
+  const [name, setName] = useState("");
+  const [interviewer, setInterviewer] = useState(null);
+
+  useEffect(() => {
+    if (props.interview) {
+      setInterviewer(props.interview.interviewer.id);
+      setName(props.interview.student);
+    }
+  }, [])
 
   const reset = () => {
     setName("");

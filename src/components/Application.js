@@ -48,7 +48,6 @@ export default function Application(props) {
     }
 
     axios.put(`/api/appointments/${id}`, putBody)
-      .then(res => console.log(res))
       .catch(error => {
         console.log(error);
       })
