@@ -17,7 +17,8 @@ the value should change when an appointment is deleted or created, but NOT when 
 we get the appointment id when that happens (but also during edit? Check previous state and new state?)
 spots are calculated by 5 - current interviews that aren't null
 
-state.days[0].spots
+state.days[0].spots gives monday's spots but it does *not* update
+could grab from axios again?
 */
 
 export default function useApplicationData() {
@@ -44,8 +45,27 @@ export default function useApplicationData() {
 
   }, []);
 
-  const updateSpots = (id) => {
+  const updateSpots = (res) => {
     // const dayIndex = Math.floor(id / 5)
+    // grabs just the id of the interview that axios made a request to
+    const interviewId = res.config.url.split('/').slice(-1)[0];
+    const dayIndex = Math.floor(interviewId / 5);
+
+    const daysUrl = `/api/days`;
+
+    axios.get(daysUrl)
+      .then(res => {
+        setState(prev => ({ ...prev, days: res.data }));
+      });
+    // axios.get(daysUrl)
+    //   .then(res => {
+    //     setState(prev => ({ ...prev, ...prev.days[dayIndex].spots: res.data[dayIndex].spots}));
+    //   });
+
+    // axios.get(daysUrl)
+    //   .then(res => console.log(res.data))
+
+    // .then(res => console.log(res.data[dayIndex].spots))
   };
 
   function bookInterview(id, interview) {
@@ -70,7 +90,7 @@ export default function useApplicationData() {
 
     return (
       axios.put(`/api/appointments/${id}`, putBody)
-        .then(res => console.log(res))
+        .then((res) => updateSpots(res))
     )
   };
 
@@ -92,7 +112,10 @@ export default function useApplicationData() {
       appointments
     })
 
-    return axios.delete(`/api/appointments/${id}`, { interview })
+    return (
+      axios.delete(`/api/appointments/${id}`, { interview })
+        .then((res) => updateSpots(res))
+    )
 
   };
 
