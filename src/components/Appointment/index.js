@@ -15,24 +15,31 @@ import useVisualMode from '../../hooks/useVisualMode'
 export default function Appointment(props) {
 
   function save(name, interviewer) {
-    transition(SAVING)
+    transition(SAVING, true)
     const interview = {
       student: name,
       interviewer
     };
     props.bookInterview(props.id, interview)
-    // IMPORTANT! REMOVE LATER! KEPT FOR DEBUGGING BECAUSE INSTANTANIOUS SAVING
-    setTimeout(() => {
-      transition(SHOW)
-    }, 1000)
-  }
+      .then(() => {
+        transition(SHOW);
+      })
+      .catch(() => {
+        transition(ERROR_SAVE, true)
+      })
+
+  };
+
   function deleteInterview() {
-    transition(DELETING)
+    transition(DELETING, true)
     props.cancelInterview(props.id)
-    // IMPORTANT! REMOVE LATER! KEPT FOR DEBUGGING BECAUSE INSTANTANIOUS DELETING
-    setTimeout(() => {
-      transition(EMPTY)
-    }, 1000)
+      .then(() => {
+        transition(EMPTY);
+      })
+      .catch(() => {
+        transition(ERROR_DELETE, true)
+      })
+
   }
   const EMPTY = "EMPTY";
   const ERROR_DELETE = "ERROR_DELETE";
@@ -53,8 +60,8 @@ export default function Appointment(props) {
       {mode === SAVING && <Status message="Saving" />}
       {mode === DELETING && <Status message="Deleting" />}
       {mode === CONFIRM && <Confirm onCancel={() => back()} onConfirm={deleteInterview} />}
-      {mode === ERROR_SAVE && <Error onClose={console.log('error close clicked')} message="Save" />}
-      {mode === ERROR_DELETE && <Error onClose={console.log('error close clicked')} message="Delete" />}
+      {mode === ERROR_SAVE && <Error onClose={() => back()} message="Save" />}
+      {mode === ERROR_DELETE && <Error onClose={() => back()} message="Delete" />}
       {mode === SHOW && (
         <Show
           student={props.interview.student}

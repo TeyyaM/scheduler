@@ -48,19 +48,13 @@ export default function Application(props) {
       interview
     }
 
-    axios.put(`/api/appointments/${id}`, putBody)
-      .catch(error => {
-        console.log(error);
-      })
+    return axios.put(`/api/appointments/${id}`, putBody)
   };
 
   function cancelInterview(id) {
 
-    axios.delete(`/api/appointments/${id}`, { interview: null })
-      .then(res => console.log(res))
-      .catch(error => {
-        console.log(error);
-      })
+    return axios.delete(`/api/appointments/${id}`, { interview: null })
+
   };
 
   const dailyAppointments = getAppointmentsForDay(state, state.day);
