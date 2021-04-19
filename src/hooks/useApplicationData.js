@@ -24,17 +24,40 @@ export default function useApplicationData() {
     });
 
   }, []);
+  useEffect(() => {
+    // skips first render when state is mostly empty
+    if (state.days.length) {
+      updateSpots(state.day, state.days, state.appointments);
+    }
 
-  const updateSpots = (res) => {
-    // gets the new spots from the API, ensures the change only happens if the request succeeds
-    // and doesn't misfire for edits (which don't change number of spots)
-    const daysUrl = `/api/days`;
+  }, [state.appointments]);
 
-    axios.get(daysUrl)
-      .then(res => {
-        setState(prev => ({ ...prev, days: res.data }));
-      })
-      .catch((error) => console.log(error))
+  const getSpotsForDay = (dayObj, appointments) => {
+
+    // checks all the appointments for the day and returns the number of null interviews
+    return (dayObj.appointments.reduce((accumulator, currentValue) => {
+      if (!appointments[currentValue].interview) {
+        accumulator++
+      }
+      return accumulator
+    }, 0));
+  };
+
+
+  const updateSpots = function(dayName, days, appointments) {
+
+    const dayObj = days.find(day => day.name === dayName);
+
+    // calculate spots for the day
+    const spots = getSpotsForDay(dayObj, appointments);
+
+    // make a copy of the day, replacing the spots value
+    const newDay = { ...dayObj, spots };
+    // replace just the changed day with the newDay object in an unmutable way
+    const newDays = days.map(day => day.name === dayName ? newDay : day);
+
+    setState(prev => ({ ...prev, days: newDays }));
+
   };
 
   function bookInterview(id, interview) {
@@ -45,8 +68,7 @@ export default function useApplicationData() {
 
     return (
       axios.put(`/api/appointments/${id}`, putBody)
-        .then((res) => {
-          updateSpots(res)
+        .then(() => {
           const appointment = {
             ...state.appointments[id],
             interview: { ...interview }
@@ -69,7 +91,6 @@ export default function useApplicationData() {
     return (
       axios.delete(`/api/appointments/${id}`, { interview: null })
         .then((res) => {
-          updateSpots(res);
 
           const appointment = {
             ...state.appointments[id],
