@@ -70,7 +70,7 @@ export default function Appointment(props) {
           onEdit={() => transition(CREATE)}
         />
       )}
-      {mode === CREATE && <Form interview={props.interview}
+      {mode === CREATE && <Form
         interviewers={props.interviewers}
         onCancel={() => back()}
         onSave={save}

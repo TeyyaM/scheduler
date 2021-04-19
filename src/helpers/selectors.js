@@ -1,5 +1,3 @@
-import React from 'react';
-
 function getForDay(state, selectedDay, searchWord) {
   const filteredDay = state.days.find(day => day.name === selectedDay);
   if (filteredDay) {
