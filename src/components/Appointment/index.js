@@ -27,7 +27,6 @@ export default function Appointment(props) {
       .catch(() => {
         transition(ERROR_SAVE, true)
       })
-
   };
 
   function deleteInterview() {

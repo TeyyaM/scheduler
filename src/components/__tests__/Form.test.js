@@ -11,7 +11,13 @@ describe("Form", () => {
       avatar: "https://i.imgur.com/LpaY82x.png"
     }
   ];
-  const interview = { student: 'Stacy Jennings', interviewer: 1 }
+  const interview = {
+    student: 'Stacy Jennings', interviewer: {
+      id: 1,
+      name: "Sylvia Palmer",
+      avatar: "https://i.imgur.com/LpaY82x.png"
+    }
+  }
 
   it("renders without student name if not provided", () => {
 
@@ -58,7 +64,7 @@ describe("Form", () => {
         onSave={onSave} />
     );
 
-    fireEvent.click(getByText("Save"), onSave(interview.student, interview.interviewer));
+    fireEvent.click(getByText("Save"));
 
     /* 3. validation is not shown */
     expect(queryByText(/student name cannot be blank/i)).toBeNull();
