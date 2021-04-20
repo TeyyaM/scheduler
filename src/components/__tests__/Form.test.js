@@ -12,7 +12,7 @@ describe("Form", () => {
     }
   ];
   const interview = {
-    student: 'Stacy Jennings', interviewer: {
+    student: "Stacy Jennings", interviewer: {
       id: 1,
       name: "Sylvia Palmer",
       avatar: "https://i.imgur.com/LpaY82x.png"
@@ -73,7 +73,42 @@ describe("Form", () => {
     expect(onSave).toHaveBeenCalledTimes(1);
 
     /* 5. onSave is called with the correct arguments */
-    expect(onSave).toHaveBeenCalledWith('Stacy Jennings', 1);
+    expect(onSave).toHaveBeenCalledWith("Stacy Jennings", 1);
+  });
+
+  it("doesn't call onSave function when the name is not blank but the interviewer is blank", () => {
+
+    const onSave = jest.fn();
+
+    const { queryByText, getByText } = render(
+      <Form interviewers={interviewers}
+        interview={{ student: "Stacy Jennings", interviewer: "" }} />
+    );
+
+    fireEvent.click(getByText("Save"));
+
+    expect(queryByText(/student name cannot be blank/i)).toBeNull();
+
+    expect(getByText(/must chose an interviewer/i)).toBeInTheDocument();
+
+    expect(onSave).not.toHaveBeenCalled();
+  });
+
+  it("submits the name entered by the user if there is an interviewer selected", () => {
+    const onSave = jest.fn();
+    const { getByText, getByPlaceholderText } = render(
+      <Form interviewers={interviewers}
+        interview={interview}
+        onSave={onSave} />
+    );
+
+    const input = getByPlaceholderText("Enter Student Name");
+
+    fireEvent.change(input, { target: { value: "Stacy Jennings" } });
+    fireEvent.click(getByText("Save"));
+
+    expect(onSave).toHaveBeenCalledTimes(1);
+    expect(onSave).toHaveBeenCalledWith("Stacy Jennings", 1);
   });
 
 });
