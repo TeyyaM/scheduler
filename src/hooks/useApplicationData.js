@@ -11,10 +11,9 @@ export default function useApplicationData() {
   // const setDay = day => setState({ ...state, day })
   const setDay = day => setState(prev => ({ ...prev, day }));
   useEffect(() => {
-    const daysUrl = `/api/days`;
+    const daysUrl = '/api/days';
     const appointmentsUrl = '/api/appointments';
-    const interviewersUrl = 'api/interviewers';
-
+    const interviewersUrl = '/api/interviewers';
     Promise.all([
       axios.get(daysUrl),
       axios.get(appointmentsUrl),
